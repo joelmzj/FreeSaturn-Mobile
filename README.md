@@ -25,7 +25,7 @@ https://github.com/SaturnMusic/mobile/releases
 https://t.me/SaturnReleases
 
 # Credits
-Saturn is a modified version of ReFreezer which you can check out by [Clicking Here.](https://github.com/DJDoubleD/refreezer)
+Saturn Mobile is a modified version of ReFreezer which you can check out by [Clicking Here.](https://github.com/DJDoubleD/refreezer)
 
 # Compile from source
 
