@@ -24,6 +24,9 @@ https://fund.saturnclient.dev/
 https://github.com/SaturnMusic/mobile/releases
 https://t.me/SaturnReleases
 
+# Credits
+Saturn is a modified version of ReFreezer which you can check out by [Clicking Here.](https://github.com/DJDoubleD/refreezer)
+
 # Compile from source
 
 Install flutter SDK 3.17.2: https://flutter.dev/docs/get-started/install  
