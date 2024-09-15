@@ -32,6 +32,9 @@ import 'router.dart';
 import 'settings_screen.dart';
 import 'tiles.dart';
 
+import '../api/clubs.dart';
+ClubRoom clubroom = ClubRoom();
+
 //So can be updated when going back from lyrics
 late Function updateColor;
 late Color scaffoldBackgroundColor;
@@ -617,7 +620,7 @@ class PlayerMenuButton extends StatelessWidget {
     return IconButton(
       icon: Icon(
         Icons.more_vert,
-        size: ScreenUtil().setWidth(20),
+        size: ScreenUtil().setWidth(12),
         semanticLabel: 'Options'.i18n,
       ),
       onPressed: () {
@@ -686,7 +689,11 @@ class _RepeatButtonState extends State<RepeatButton> {
     return IconButton(
       icon: repeatIcon,
       onPressed: () async {
-        await GetIt.I<AudioPlayerHandler>().changeRepeat();
+          if (clubroom.ifclub()) {
+            null;
+          } else {
+            await GetIt.I<AudioPlayerHandler>().changeRepeat();
+          }
         setState(() {});
       },
     );
@@ -735,9 +742,14 @@ class _PlaybackControlsState extends State<PlaybackControls> {
               ),
               onPressed: () async {
                 await deezerAPI.dislikeTrack(audioHandler.mediaItem.value!.id);
+                while (true) {
+                if (clubroom.ifhost()) {
                 if (audioHandler.queueState.hasNext) {
                   audioHandler.skipToNext();
                 }
+                } else {
+                  null;
+                }}
               }),
           PrevNextButton(widget.iconSize, prev: true),
           PlayPauseButton(widget.iconSize * 1.25),
@@ -784,7 +796,7 @@ class _BigAlbumArtState extends State<BigAlbumArt> with WidgetsBindingObserver {
   late PageController _pageController;
   StreamSubscription? _currentItemAndQueueSub;
   bool _isVisible = false;
-  bool _changeTrackOnPageChange = true;
+  bool  _changeTrackOnPageChange = true;
 
   @override
   void initState() {
@@ -847,7 +859,7 @@ class _BigAlbumArtState extends State<BigAlbumArt> with WidgetsBindingObserver {
     if (_isVisible) {
       // Widget is visible, animate to the target page
       _changeTrackOnPageChange = false;
-      await _pageController
+              await _pageController
           .animateToPage(
         targetPage,
         duration: const Duration(milliseconds: 300),
@@ -900,9 +912,11 @@ class _BigAlbumArtState extends State<BigAlbumArt> with WidgetsBindingObserver {
         child: PageView(
           controller: _pageController,
           onPageChanged: (int index) {
+            if (clubroom.ifhost()) {
             if (_changeTrackOnPageChange) {
               // Only trigger if the page change is caused by user swiping
-              audioHandler.skipToQueueItem(index);
+                audioHandler.skipToQueueItem(index);
+              }
             }
           },
           children: _imageList,
@@ -976,10 +990,17 @@ class PlayerScreenTopRow extends StatelessWidget {
                 .localToGlobal(buttonRenderBox.size.center(Offset.zero));
             //Navigate
             //await Navigator.of(context).push(MaterialPageRoute(builder: (context) => QueueScreen()));
+            if (clubroom.ifclub()) {
+              await Navigator.of(context).push(CircularExpansionRoute(
+                widget: const QueueScreenNoDRG(),
+                //centerAlignment: Alignment.topRight,
+                centerOffset: buttonOffset));
+            } else {
             await Navigator.of(context).push(CircularExpansionRoute(
                 widget: const QueueScreen(),
                 //centerAlignment: Alignment.topRight,
-                centerOffset: buttonOffset)); // Expand from icon
+                centerOffset: buttonOffset));
+            } // Expand from icon
             //Fix colors
             updateColor();
           },
@@ -1069,7 +1090,9 @@ class _SeekBarState extends State<SeekBar> {
                   });
                 },
                 onChangeEnd: (double d) async {
+                  if (clubroom.ifhost()) {
                   await audioHandler.seek(Duration(milliseconds: d.round()));
+                  } 
                   setState(() {
                     _pos = d;
                     _seeking = false;
@@ -1129,7 +1152,11 @@ class _QueueScreenState extends State<QueueScreen> {
                     shuffleModeEnabled ? Theme.of(context).primaryColor : null,
               ),
               onPressed: () async {
+                if (clubroom.ifhost()) {
                 await audioHandler.toggleShuffle();
+                } else {
+                  null;
+                }
               },
             ),
           )
@@ -1144,8 +1171,12 @@ class _QueueScreenState extends State<QueueScreen> {
                 return TrackTile(
                   track,
                   onTap: () async {
+                    if (clubroom.ifhost()) {
                     await audioHandler.skipToQueueItem(index);
                     if (context.mounted) Navigator.of(context).pop();
+                    } else {
+                      null;
+                    }
                   },
                   key: Key(mediaItem.id),
                   trailing: IconButton(
@@ -1154,7 +1185,11 @@ class _QueueScreenState extends State<QueueScreen> {
                       semanticLabel: 'Close'.i18n,
                     ),
                     onPressed: () async {
-                      await audioHandler.removeQueueItem(mediaItem);
+                      if (clubroom.ifclub()) {
+                      null;
+                      } else {
+                        await audioHandler.removeQueueItem(mediaItem);
+                      }                   
                     },
                   ),
                 );
@@ -1163,10 +1198,14 @@ class _QueueScreenState extends State<QueueScreen> {
           : ReorderableListView.builder(
               itemCount: queueState.queue.length,
               onReorder: (int oldIndex, int newIndex) async {
+              if (clubroom.ifclub()) {
+                null;
+              } else {
                 // Circumvent bug in ReorderableListView that won't be fixed: https://github.com/flutter/flutter/pull/93146#issuecomment-1032082749
                 if (newIndex > oldIndex) newIndex -= 1;
                 if (oldIndex == newIndex) return;
                 await audioHandler.moveQueueItem(oldIndex, newIndex);
+              }
               },
               itemBuilder: (context, index) {
                 final mediaItem = queueState.queue[index];
@@ -1174,8 +1213,10 @@ class _QueueScreenState extends State<QueueScreen> {
                 return TrackTile(
                   track,
                   onTap: () async {
+                    if (clubroom.ifhost()) {
                     await audioHandler.skipToQueueItem(index);
                     if (context.mounted) Navigator.of(context).pop();
+                    }
                   },
                   key: Key(mediaItem.id),
                   trailing: IconButton(
@@ -1184,12 +1225,85 @@ class _QueueScreenState extends State<QueueScreen> {
                       semanticLabel: 'Close'.i18n,
                     ),
                     onPressed: () async {
-                      await audioHandler.removeQueueItem(mediaItem);
+                      if (clubroom.ifclub()) {
+                      null;
+                      } else {
+                        await audioHandler.removeQueueItem(mediaItem);
+                      }    
                     },
                   ),
                 );
               },
             ),
+    );
+  }
+}
+
+class QueueScreenNoDRG extends StatefulWidget {
+  const QueueScreenNoDRG({super.key});
+
+  @override
+  _QueueScreenNoDRGState createState() => _QueueScreenNoDRGState();
+}
+
+class _QueueScreenNoDRGState extends State<QueueScreenNoDRG> {
+  AudioPlayerHandler audioHandler = GetIt.I<AudioPlayerHandler>();
+  late StreamSubscription _queueStateSub;
+
+  @override
+  void initState() {
+    super.initState();
+    _queueStateSub = audioHandler.queueStateStream.listen((queueState) {
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _queueStateSub.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final queueState = audioHandler.queueState;
+
+    return Scaffold(
+      appBar: FreezerAppBar(
+        'Queue'.i18n,
+      ),
+      body: ListView.builder(
+              itemCount: queueState.queue.length,
+              itemBuilder: (context, index) {
+                final mediaItem = queueState.queue[index];
+                final track = Track.fromMediaItem(mediaItem);
+                return TrackTile(
+                  track,
+                  onTap: () async {
+                    if (clubroom.ifhost()) {
+                    await audioHandler.skipToQueueItem(index);
+                    if (context.mounted) Navigator.of(context).pop();
+                    } else {
+                      null;
+                    }
+                  },
+                  key: Key(mediaItem.id),
+                  trailing: IconButton(
+                    icon: Icon(
+                      Icons.close,
+                      semanticLabel: 'Close'.i18n,
+                    ),
+                    onPressed: () async {
+                      if (clubroom.ifclub()) {
+                      null;
+                      } else {
+                        await audioHandler.removeQueueItem(mediaItem);
+                      }                   
+                    },
+                  ),
+                );
+              },
+            )
     );
   }
 }

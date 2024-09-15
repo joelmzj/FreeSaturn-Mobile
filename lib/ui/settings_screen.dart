@@ -866,14 +866,14 @@ class _FilenameTemplateDialogState extends State<FilenameTemplateDialog> {
         ),
         TextButton(
                                                       style: ButtonStyle(
-                                              foregroundColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColor)
+                                              overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColor)
                                             ),
           child: Text('Clear'.i18n),
           onPressed: () => _controller.clear(),
         ),
         TextButton(
                                                       style: ButtonStyle(
-                                              foregroundColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColor)
+                                              overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColor)
                                             ),
           child: Text('Save'.i18n),
           onPressed: () async {
@@ -1003,7 +1003,7 @@ class _DownloadsSettingsState extends State<DownloadsSettings> {
                           actions: [
                             TextButton(
                                                                           style: ButtonStyle(
-                                              foregroundColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColor)
+                                              overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColor)
                                             ),
                               child: Text('Dismiss'.i18n),
                               onPressed: () => Navigator.of(context).pop(),
@@ -1275,7 +1275,7 @@ class _GeneralSettingsState extends State<GeneralSettings> {
                               gravity: ToastGravity.BOTTOM,
                               toastLength: Toast.LENGTH_SHORT);
                         }
-                        Navigator.of(context).pop();
+                        if (context.mounted) Navigator.of(context).pop();
                       });
                       return AlertDialog(
                           title: Text('Logging in...'.i18n),
@@ -1820,6 +1820,47 @@ static final List<List<String>> translators = [
             _version,
             textAlign: TextAlign.center,
             style: const TextStyle(fontStyle: FontStyle.italic),
+          ),
+          const FreezerDivider(),
+          ListTile(
+            title: Text('Telegram Channel'.i18n),
+            subtitle: Text('To get latest releases'.i18n),
+            leading: Icon(FontAwesome5.telegram, color: Color(0xFF27A2DF), size: 36.0),
+            onTap: () {
+              launchUrlString('https://t.me/SaturnReleases');
+            },
+          ),
+          ListTile(
+            title: Text('Telegram Group'.i18n),
+            subtitle: Text('Official chat'.i18n),
+            leading: Icon(FontAwesome5.telegram, color: Colors.cyan, size: 36.0),
+            onTap: () {
+              launchUrlString('https://t.me/SaturnDiscuss');
+            },
+          ),
+          ListTile(
+            title: Text('Discord'.i18n),
+            subtitle: Text('Official Discord server'.i18n),
+            leading: Icon(FontAwesome5.discord, color: Color(0xff7289da), size: 36.0),
+            onTap: () {
+              launchUrlString('https://saturnclient.dev/discord');
+            },
+          ),
+          ListTile(
+            title: Text('Repository'.i18n),
+            subtitle: Text('Source code, report issues there.'.i18n),
+            leading: Icon(Icons.code, color: Colors.green, size: 36.0),
+            onTap: () {
+              launchUrlString('https://github.com/SaturnMusic/Mobile');
+            },
+          ),
+          ListTile(
+            title: Text('Donate'),
+            subtitle: Text('Send crypto to the Saturn fund to support the development.'),
+            leading: Icon(FontAwesome5.bitcoin, color: Color.fromRGBO(247,147,26, 58), size: 36.0),
+            onTap: () {
+              launchUrlString('https://fund.saturnclient.dev/');
+            },
           ),
           const FreezerDivider(),
           ListTile(

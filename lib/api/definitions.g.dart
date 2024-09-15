@@ -57,6 +57,34 @@ Map<String, dynamic> _$TrackToJson(Track instance) => <String, dynamic>{
       'playbackDetailsFallback': instance.playbackDetailsFallback,
     };
 
+ClubUser _$ClubUserFromJson(Map<String, dynamic> json) => ClubUser(
+      id: json['id'] as int, // Ensuring 'id' is an int, as per your class definition
+      sid: json['sid'] as String, // Ensuring 'sid' is a String
+      username: json['username'] as String, // Ensuring 'username' is a String
+      picture: json['picture'] as String, // Ensuring 'picture' is a String
+      admin: json['admin'] as bool? ?? false, // Handling 'admin' as an optional bool
+    );
+
+Map<String, dynamic> _$ClubUserToJson(ClubUser instance) => <String, dynamic>{
+      'id': instance.id,
+      'sid': instance.sid,
+      'username': instance.username,
+      'picture': instance.picture,
+      'admin': instance.admin,
+    };
+
+ClubMSG _$ClubMSGFromJson(Map<String, dynamic> json) => ClubMSG(
+      content: json['content'] as String, // Ensuring 'content' is a String
+      profile: json['profile'] as String, // Ensuring 'username' is a String
+      photo: json['photo'] as String, // Ensuring 'picture' is a String
+    );
+
+Map<String, dynamic> _$ClubMSGToJson(ClubMSG instance) => <String, dynamic>{
+      'content': instance.content,
+      'profile': instance.profile,
+      'photo': instance.photo,
+    };
+
 Album _$AlbumFromJson(Map<String, dynamic> json) => Album(
       id: json['id'] as String?,
       title: json['title'] as String?,

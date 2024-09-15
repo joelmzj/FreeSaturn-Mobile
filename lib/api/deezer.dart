@@ -4,7 +4,6 @@ import 'dart:math';
 
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
-
 import '../api/definitions.dart';
 import '../api/spotify.dart';
 import '../settings.dart';
@@ -538,14 +537,17 @@ class DeezerAPI {
   }
 
   //Log song listen to deezer
-  Future logListen(String trackId) async {
+  Future logListen(String trackId, QueueSource? queue) async {
+    final String? queuesrc = queue?.source;
+    final String? queueid = queue?.id;
     await callGwApi('log.listen', params: {
       'params': {
         'timestamp': DateTime.now().millisecondsSinceEpoch,
         'ts_listen': DateTime.now().millisecondsSinceEpoch,
         'type': 1,
         'stat': {'seek': 0, 'pause': 0, 'sync': 1},
-        'media': {'id': trackId, 'type': 'song', 'format': 'MP3_128'}
+        'ctxt': { 't': queuesrc, 'id': queueid },
+        'media': {'id': trackId, 'type': 'song', 'format': 'MP3_128'},
       }
     });
   }
