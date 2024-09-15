@@ -248,24 +248,24 @@ class _SearchScreenState extends State<SearchScreen> {
                                         content: Text('Continuing may result in rainbows and gay people!'.i18n),
                                         actions: <Widget>[
                                           TextButton(
-                                            child: Text('Get me out!'.i18n),
                                             onPressed: () => Navigator.of(context).pop(),
                                                     style: ButtonStyle(
-          overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColor),
+          overlayColor: WidgetStateProperty.all<Color>(Theme.of(context).primaryColor),
          ),
+         child: Text('Get me out!'.i18n),
                                           ),
                                           TextButton(
-                                            child: Text('Yes I\'m sure!'.i18n),
                                                     style: ButtonStyle(
-          overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColor),
+          overlayColor: WidgetStateProperty.all<Color>(Theme.of(context).primaryColor),
          ),
+         child: Text('Yes I\'m sure!'.i18n),
                                             onPressed: () async {
                                               _submit(realcontext, query: s); // Handle the normal submission
                                               Navigator.of(context).pop(); // Close the dialog
                                               _textFieldFocusNode.unfocus();
 
                                               // Add a 10-second delay before calling startRainbowColorUpdates
-                                              await Future.delayed(Duration(seconds: 10));
+                                              await Future.delayed(const Duration(seconds: 10));
                                               settings.startRainbowColorUpdates();
                                             },
                                           )

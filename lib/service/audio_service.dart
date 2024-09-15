@@ -53,6 +53,8 @@ class AudioPlayerHandler extends BaseAudioHandler
   int? _prevAudioSession;
   bool _equalizerOpen = false;
 
+  final AndroidAuto _androidAuto = AndroidAuto(); // Create an instance of AndroidAuto
+
   // for some reason, dart can decide not to respect the 'await' due to weird task sceduling ...
   final Completer<void> _playerInitializedCompleter = Completer<void>();
   late AudioPlayer _player;
@@ -78,6 +80,7 @@ class AudioPlayerHandler extends BaseAudioHandler
   Stream<QueueState> get queueStateStream => _queueStateSubject.stream;
   QueueState get queueState => _queueStateSubject.value;
   int currentIndex = 0;
+  int _requestedIndex = -1;
 
 Future<void> _init() async {
   await _startSession();
@@ -127,6 +130,9 @@ Future<void> _init() async {
       _player.currentIndexStream, queue, _player.shuffleModeEnabledStream,
       (index, queue, shuffleModeEnabled) {
     if (_rearranging) return null;
+
+    // Prevent broadcasting first item from new queue when other index is requested
+    if (_requestedIndex != -1 && _requestedIndex != index) return null;
 
     final queueIndex = _getQueueIndex(
       index ?? 0,
@@ -241,9 +247,6 @@ Future<void> _init() async {
     }
   }
 
-
-  final AndroidAuto _androidAuto = AndroidAuto(); // Create an instance of AndroidAuto
-
   @override
   Future<void> playFromMediaId(String mediaId, [Map<String, dynamic>? extras]) async {
 
@@ -339,6 +342,11 @@ Future<void> _init() async {
     }
   }
 
+  Future<void> clearQueue() async {
+    await updateQueue([]);
+    await removeSavedQueueFile();
+  }
+
   @override
   Future<void> removeQueueItem(MediaItem mediaItem) async {
     final queue = this.queue.value;
@@ -412,7 +420,7 @@ Future<void> _init() async {
   @override
   Future<void> setShuffleMode(AudioServiceShuffleMode shuffleMode) async {
     final enabled = shuffleMode == AudioServiceShuffleMode.all;
-    _rearranging = enabled;
+    _rearranging = true;
     await _player.setShuffleModeEnabled(enabled);
     _rearranging = false;
     if (enabled) {
@@ -437,8 +445,7 @@ Future<void> _init() async {
     Map<String, dynamic>? options,
   ]) async {
     //Android audio callback
-    AndroidAuto androidAuto = AndroidAuto();
-    return androidAuto.getScreen(parentMediaId);
+    return _androidAuto.getScreen(parentMediaId);
   }
 
   //----------------------------------------------
@@ -625,6 +632,8 @@ Future<bool> _canControlMedia() async {
   /// Load new queue of MediaItems to just_audio & seek to given index & position
   Future _loadQueueAtIndex(List<MediaItem> newQueue, int index,
       {Duration position = Duration.zero}) async {
+      //Set requested index
+    _requestedIndex = index;
     //Clear old playlist from just_audio
     await _playlist.clear();
 
@@ -637,6 +646,7 @@ Future<bool> _canControlMedia() async {
     } catch (e, st) {
       Logger.root.severe('Error loading tracks', e, st);
     }
+    _requestedIndex = -1;
   }
 
   //Replace queue, play specified item index
@@ -644,6 +654,8 @@ Future<bool> _canControlMedia() async {
       QueueSource newQueueSource, List<MediaItem> newQueue, int index) async {
     // Pauze platback if playing (Player seems to crash on some devices otherwise)
     await pause();  
+    //Set requested index
+    _requestedIndex = index;
 
     queueSource = newQueueSource;
     await updateQueue(newQueue);
@@ -651,6 +663,7 @@ Future<bool> _canControlMedia() async {
     await skipToQueueItem(index);
 
     play();
+    _requestedIndex = -1;
   }
 
   //Replace queue, play specified item index

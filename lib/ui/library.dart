@@ -175,7 +175,7 @@ class LibraryScreen extends StatelessWidget {
                   if (snapshot.hasError) return const ErrorScreen();
                   if (!snapshot.hasData) {
                     return Padding(
-                      padding: EdgeInsets.symmetric(vertical: 4.0),
+                      padding: const EdgeInsets.symmetric(vertical: 4.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[CircularProgressIndicator(color: Theme.of(context).primaryColor,)],
@@ -556,7 +556,7 @@ class _LibraryTracksState extends State<LibraryTracks> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Padding(
-                        padding: EdgeInsets.symmetric(vertical: 8.0),
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
                         child: CircularProgressIndicator(color: Theme.of(context).primaryColor,),
                       )
                     ],
@@ -955,7 +955,7 @@ class _LibraryArtistsState extends State<LibraryArtists> {
             children: <Widget>[
               if (_loading)
                 Padding(
-                  padding: EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(8.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [CircularProgressIndicator(color: Theme.of(context).primaryColor,)],

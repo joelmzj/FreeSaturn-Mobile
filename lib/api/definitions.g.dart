@@ -58,11 +58,11 @@ Map<String, dynamic> _$TrackToJson(Track instance) => <String, dynamic>{
     };
 
 ClubUser _$ClubUserFromJson(Map<String, dynamic> json) => ClubUser(
-      id: json['id'] as int, // Ensuring 'id' is an int, as per your class definition
-      sid: json['sid'] as String, // Ensuring 'sid' is a String
-      username: json['username'] as String, // Ensuring 'username' is a String
-      picture: json['picture'] as String, // Ensuring 'picture' is a String
-      admin: json['admin'] as bool? ?? false, // Handling 'admin' as an optional bool
+      id: (json['id'] as num).toInt(),
+      sid: json['sid'] as String,
+      username: json['username'] as String,
+      picture: json['picture'] as String,
+      admin: json['admin'] as bool,
     );
 
 Map<String, dynamic> _$ClubUserToJson(ClubUser instance) => <String, dynamic>{
@@ -74,9 +74,9 @@ Map<String, dynamic> _$ClubUserToJson(ClubUser instance) => <String, dynamic>{
     };
 
 ClubMSG _$ClubMSGFromJson(Map<String, dynamic> json) => ClubMSG(
-      content: json['content'] as String, // Ensuring 'content' is a String
-      profile: json['profile'] as String, // Ensuring 'username' is a String
-      photo: json['photo'] as String, // Ensuring 'picture' is a String
+      profile: json['profile'] as String,
+      photo: json['photo'] as String,
+      content: json['content'] as String,
     );
 
 Map<String, dynamic> _$ClubMSGToJson(ClubMSG instance) => <String, dynamic>{

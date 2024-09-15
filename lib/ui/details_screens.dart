@@ -641,7 +641,7 @@ class _DiscographyScreenState extends State<DiscographyScreen> {
   Widget get _loadingWidget {
     if (_loading) {
       return Padding(
-        padding: EdgeInsets.symmetric(vertical: 8.0),
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [CircularProgressIndicator(color: Theme.of(context).primaryColor,)],
@@ -1110,7 +1110,7 @@ class _PlaylistDetailsState extends State<PlaylistDetails> {
           }),
           if (_loading)
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 8.0),
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[CircularProgressIndicator(color: Theme.of(context).primaryColor,)],
@@ -1275,7 +1275,7 @@ class _ShowScreenState extends State<ShowScreen> {
           //Loading
           if (_loading)
             Padding(
-              padding: EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(8.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [CircularProgressIndicator(color: Theme.of(context).primaryColor,)],

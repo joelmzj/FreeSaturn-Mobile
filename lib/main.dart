@@ -116,7 +116,7 @@ class _SaturnAppState extends State<SaturnApp> {
       supportedLocales: supportedLocales,
       home: PopScope(
         canPop: false, // Prevent full app exit
-        onPopInvoked: (bool didPop) async {
+        onPopInvokedWithResult: (bool didPop, Object? result) async {
           // When at least 1 layer inside a custom navigator screen,
           // let the back button move back down the custom navigator stack
           if (customNavigatorKey.currentState!.canPop()) {
@@ -248,7 +248,7 @@ class _MainScreenState extends State<MainScreen>
 
     //Check for updates on background
     //No automatic updates yet
-    Future.delayed(Duration(seconds: 5), () {
+    Future.delayed(const Duration(seconds: 5), () {
       FreezerVersions.checkUpdate();
     });
 
