@@ -248,7 +248,7 @@ class _MainScreenState extends State<MainScreen>
 
     //Check for updates on background
     //No automatic updates yet
-    Future.delayed(Duration(seconds: 5), () {
+    Future.delayed(const Duration(seconds: 5), () {
       FreezerVersions.checkUpdate();
     });
 

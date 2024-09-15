@@ -26,7 +26,6 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 import '../api/cache.dart';
 import '../api/deezer.dart';
-import '../fonts/refreezer_icons.dart';
 import '../main.dart';
 import '../utils/navigator_keys.dart';
 import '../service/audio_service.dart';
@@ -98,30 +97,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             await settings.save();
                             // Close the SimpleDialog
                             if (context.mounted) Navigator.of(context).pop();
-                            showDialog(
-                                context: mainNavigatorKey.currentContext!,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: Text('Language'.i18n),
-                                    content: Text(
-                                        'Language changed, please restart Saturn to apply!'
-                                            .i18n),
-                                    actions: [
-                                      TextButton(
-                                                style: ButtonStyle(
-          overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColor),
-         ),
-                                        child: const Text('OK'),
-                                        onPressed: () {
-                                          // Close the AlertDialog
-                                          Navigator.of(context).pop();
-                                          // Close the SimpleDialog
-                                          Navigator.of(context).pop();
-                                        },
-                                      )
-                                    ],
-                                  );
-                                });
                           },
                         );
                       })));
@@ -386,7 +361,7 @@ class _FontSelectorState extends State<FontSelector> {
               actions: [
                 TextButton(
                           style: ButtonStyle(
-          overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColor),
+          overlayColor: WidgetStateProperty.all<Color>(Theme.of(context).primaryColor),
          ),
                   onPressed: () async {
                     setState(() => settings.font = font);
@@ -400,7 +375,7 @@ class _FontSelectorState extends State<FontSelector> {
                 ),
                 TextButton(
                           style: ButtonStyle(
-          overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColor),
+          overlayColor: WidgetStateProperty.all<Color>(Theme.of(context).primaryColor),
          ),
                   onPressed: () {
                     Navigator.of(context).pop();
@@ -704,7 +679,7 @@ class _DeezerSettingsState extends State<DeezerSettings> {
             ),
             leading: const Icon(Icons.history_toggle_off),
           ),
-          //TODO: Reimplement proxy
+          //todo: Reimplement proxy
 //          ListTile(
 //            title: Text('Proxy'.i18n),
 //            leading: Icon(Icons.vpn_key),
@@ -812,14 +787,14 @@ class _FilenameTemplateDialogState extends State<FilenameTemplateDialog> {
       actions: [
         TextButton(
                   style: ButtonStyle(
-          overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColor),
+          overlayColor: WidgetStateProperty.all<Color>(Theme.of(context).primaryColor),
          ),
           child: Text('Cancel'.i18n),
           onPressed: () => Navigator.of(context).pop(),
         ),
         TextButton(
                   style: ButtonStyle(
-          overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColor),
+          overlayColor: WidgetStateProperty.all<Color>(Theme.of(context).primaryColor),
          ),
           child: Text('Reset'.i18n),
           onPressed: () {
@@ -829,14 +804,14 @@ class _FilenameTemplateDialogState extends State<FilenameTemplateDialog> {
         ),
         TextButton(
                                                       style: ButtonStyle(
-                                              overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColor)
+                                              overlayColor: WidgetStateProperty.all<Color>(Theme.of(context).primaryColor)
                                             ),
           child: Text('Clear'.i18n),
           onPressed: () => _controller.clear(),
         ),
         TextButton(
                                                       style: ButtonStyle(
-                                              overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColor)
+                                              overlayColor: WidgetStateProperty.all<Color>(Theme.of(context).primaryColor)
                                             ),
           child: Text('Save'.i18n),
           onPressed: () async {
@@ -958,7 +933,7 @@ class _DownloadsSettingsState extends State<DownloadsSettings> {
                           actions: [
                             TextButton(
                                                                           style: ButtonStyle(
-                                              overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColor)
+                                              overlayColor: WidgetStateProperty.all<Color>(Theme.of(context).primaryColor)
                                             ),
                               child: Text('Dismiss'.i18n),
                               onPressed: () => Navigator.of(context).pop(),
@@ -1289,8 +1264,8 @@ class _GeneralSettingsState extends State<GeneralSettings> {
           ),
           ListTile(
             title: Text('LastFM API Key'.i18n),
-            leading: Icon(Icons.key),
-            trailing: Container(
+            leading: const Icon(Icons.key),
+            trailing: SizedBox(
               width: 75.0,
               child: TextField(
                 cursorColor: Theme.of(context).primaryColor,
@@ -1309,8 +1284,8 @@ class _GeneralSettingsState extends State<GeneralSettings> {
           ),
           ListTile(
             title: Text('LastFM API Secret'.i18n),
-            leading: Icon(Icons.warning),
-            trailing: Container(
+            leading: const Icon(Icons.warning),
+            trailing: SizedBox(
               width: 75.0,
               child: TextField(
                 cursorColor: Theme.of(context).primaryColor,
@@ -1341,7 +1316,7 @@ class _GeneralSettingsState extends State<GeneralSettings> {
           ),
           ListTile(
             title: Text('Disable Eastereggs'.i18n),
-            leading: Icon(Icons.egg),
+            leading: const Icon(Icons.egg),
             trailing: Switch(
               value: settings.eastereggsDisabled,
               onChanged: (bool v) async {
@@ -1377,14 +1352,14 @@ class _GeneralSettingsState extends State<GeneralSettings> {
                         actions: <Widget>[
                           TextButton(
                                                       style: ButtonStyle(
-          overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColor),
+          overlayColor: WidgetStateProperty.all<Color>(Theme.of(context).primaryColor),
          ),
                             child: Text('Cancel'.i18n),
                             onPressed: () => Navigator.of(context).pop(),
                           ),
                           TextButton(
                                                       style: ButtonStyle(
-          overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColor),
+          overlayColor: WidgetStateProperty.all<Color>(Theme.of(context).primaryColor),
          ),
                             //child: Text('(ARL ONLY) Continue'.i18n),
                             child: Text('Continue'.i18n),
@@ -1464,14 +1439,14 @@ class _LastFMLoginState extends State<LastFMLogin> {
       actions: [
         TextButton(
                                     style: ButtonStyle(
-          overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColor),
+          overlayColor: WidgetStateProperty.all<Color>(Theme.of(context).primaryColor),
          ),
           child: Text('Cancel'.i18n),
           onPressed: () => Navigator.of(context).pop(),
         ),
         TextButton(
                                     style: ButtonStyle(
-          overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColor),
+          overlayColor: WidgetStateProperty.all<Color>(Theme.of(context).primaryColor),
          ),
           child: Text('Login'.i18n),
           onPressed: () async {
@@ -1590,7 +1565,7 @@ class _DirectoryPickerState extends State<DirectoryPicker> {
                             if (snapshot.hasError) return const ErrorScreen();
                             if (!snapshot.hasData) {
                               return Padding(
-                                padding: EdgeInsets.symmetric(vertical: 8.0),
+                                padding: const EdgeInsets.symmetric(vertical: 8.0),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
@@ -1729,8 +1704,6 @@ class _CreditsScreenState extends State<CreditsScreen> {
   //   ['LenteraMalam', 'Indonesian'],
   //   ['RTWO2', 'Persian']
   // ];
-static final List<List<String>> translators = [
-];
 
 
   @override
@@ -1759,7 +1732,7 @@ static final List<List<String>> translators = [
           ListTile(
             title: Text('Telegram Channel'.i18n),
             subtitle: Text('To get latest releases'.i18n),
-            leading: Icon(FontAwesome5.telegram, color: Color(0xFF27A2DF), size: 36.0),
+            leading: const Icon(FontAwesome5.telegram, color: Color(0xFF27A2DF), size: 36.0),
             onTap: () {
               launchUrlString('https://t.me/SaturnReleases');
             },
@@ -1767,7 +1740,7 @@ static final List<List<String>> translators = [
           ListTile(
             title: Text('Telegram Group'.i18n),
             subtitle: Text('Official chat'.i18n),
-            leading: Icon(FontAwesome5.telegram, color: Colors.cyan, size: 36.0),
+            leading: const Icon(FontAwesome5.telegram, color: Colors.cyan, size: 36.0),
             onTap: () {
               launchUrlString('https://t.me/SaturnDiscuss');
             },
@@ -1775,7 +1748,7 @@ static final List<List<String>> translators = [
           ListTile(
             title: Text('Discord'.i18n),
             subtitle: Text('Official Discord server'.i18n),
-            leading: Icon(FontAwesome5.discord, color: Color(0xff7289da), size: 36.0),
+            leading: const Icon(FontAwesome5.discord, color: Color(0xff7289da), size: 36.0),
             onTap: () {
               launchUrlString('https://saturnclient.dev/discord');
             },
@@ -1783,23 +1756,23 @@ static final List<List<String>> translators = [
           ListTile(
             title: Text('Repository'.i18n),
             subtitle: Text('Source code, report issues there.'.i18n),
-            leading: Icon(Icons.code, color: Colors.green, size: 36.0),
+            leading: const Icon(Icons.code, color: Colors.green, size: 36.0),
             onTap: () {
               launchUrlString('https://github.com/SaturnMusic/Mobile');
             },
           ),
           ListTile(
-            title: Text('Donate'),
-            subtitle: Text('Send crypto to the Saturn fund to support the development.'),
-            leading: Icon(FontAwesome5.bitcoin, color: Color.fromRGBO(247,147,26, 58), size: 36.0),
+            title: const Text('Donate'),
+            subtitle: const Text('Send crypto to the Saturn fund to support the development.'),
+            leading: const Icon(FontAwesome5.bitcoin, color: Color.fromRGBO(247,147,26, 58), size: 36.0),
             onTap: () {
               launchUrlString('https://fund.saturnclient.dev/');
             },
           ),
           const FreezerDivider(),
           ListTile(
-            title: Text('bw86'),
-            subtitle: Text('Logo Designer, Developer'),
+            title: const Text('bw86'),
+            subtitle: const Text('Logo Designer, Developer'),
             onTap: () {
                                   showDialog(
                                     context: context,
@@ -1809,11 +1782,11 @@ static final List<List<String>> translators = [
                                         content: Text('www.semen.makeup'.i18n),
                                         actions: <Widget>[
                                           TextButton(
-                                            child: Text('AGREE'.i18n),
                                             style: ButtonStyle(
-                                              foregroundColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColor)
+                                              foregroundColor: WidgetStateProperty.all<Color>(Theme.of(context).primaryColor)
                                             ),
                                             onPressed: () => Navigator.of(context).pop(),
+                                            child: Text('AGREE'.i18n),
                                           ),
                                         ],
                                       );
@@ -1822,8 +1795,8 @@ static final List<List<String>> translators = [
             }
           ),
           ListTile(
-            title: Text('Matt'),
-            subtitle: Text('Developer'),
+            title: const Text('Matt'),
+            subtitle: const Text('Developer'),
                         onTap: () {
                                   showDialog(
                                     context: context,
@@ -1833,11 +1806,11 @@ static final List<List<String>> translators = [
                                         content: Text('github.com/Ascensionist'.i18n),
                                         actions: <Widget>[
                                           TextButton(
-                                            child: Text('AGREE'.i18n),
                                             style: ButtonStyle(
-                                              foregroundColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColor)
+                                              foregroundColor: WidgetStateProperty.all<Color>(Theme.of(context).primaryColor)
                                             ),
                                             onPressed: () => Navigator.of(context).pop(),
+                                            child: Text('AGREE'.i18n),
                                           ),
                                         ],
                                       );
@@ -1854,102 +1827,11 @@ static final List<List<String>> translators = [
             subtitle: Text('Original Freezer App'),
           ),
           ListTile(
-            title: Text('Open-Source Licenses & Libraries'),
+            title: const Text('Open-Source Licenses & Libraries'),
             onTap: () => Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const LicensesScreen()),
             ),
-          ),
-          const FreezerDivider(),
-          const Padding(padding: EdgeInsets.all(8.0)),
-          ...List.generate(
-              translators.length,
-              (i) => ListTile(
-                    title: Text(translators[i][0]),
-                    subtitle: Text(translators[i][1]),
-                  )),
-          const Padding(padding: EdgeInsets.all(8.0)),
-          const FreezerDivider(),
-          ExpansionTile(
-            title: LayoutBuilder(
-              builder: (context, constraints) {
-                return Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Image.asset('assets/icon_legacy.png', width: 24, height: 24),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: Text(
-                              'The original freezer development team'.i18n,
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.w600,
-                              ),
-                              softWrap: true,
-                              overflow: TextOverflow.visible,
-                            ),
-                          ),
-                        ),
-                        Image.asset('assets/icon_legacy.png', width: 24, height: 24),
-                      ],
-                    ),
-                  ],
-                );
-              },
-            ),
-            textColor: Theme.of(context).primaryColor,
-            iconColor: Theme.of(context).primaryColor,
-            tilePadding: const EdgeInsets.symmetric(horizontal: 16.0),
-            shape: const Border(),
-            children: [
-              const FreezerDivider(),
-              const ListTile(
-                title: Text('exttex'),
-                subtitle: Text('Developer'),
-              ),
-              const ListTile(
-                title: Text('Bas Curtiz'),
-                subtitle: Text('Icon, logo, banner, design suggestions, tester'),
-              ),
-              const ListTile(
-                title: Text('Tobs'),
-                subtitle: Text('Alpha testers'),
-              ),
-              const ListTile(
-                title: Text('Deemix'),
-                subtitle: Text('Better app <3'),
-              ),
-              const ListTile(
-                title: Text('Xandar Null'),
-                subtitle: Text('Tester, translations help'),
-              ),
-              ListTile(
-                title: const Text('Francesco'),
-                subtitle: const Text('Tester'),
-                onTap: () {
-                  setState(() {
-                    settings.primaryColor = const Color(0xff333333);
-                  });
-                  updateTheme();
-                  settings.save();
-                },
-              ),
-              const ListTile(
-                title: Text('Annexhack'),
-                subtitle: Text('Android Auto help'),
-              ),
-              const FreezerDivider(),
-              ...List.generate(
-                  freezerTranslators.length,
-                  (i) => ListTile(
-                        title: Text(freezerTranslators[i][0]),
-                        subtitle: Text(freezerTranslators[i][1]),
-                      )),
-            ],
           ),
           const FreezerDivider(),
           Padding(
@@ -1961,59 +1843,6 @@ static final List<List<String>> translators = [
             ),
           ),
           const FreezerDivider(),
-        ],
-      ),
-    );
-  }
-}
-
-class LicensesScreen extends StatefulWidget {
-  const LicensesScreen({super.key});
-
-  @override
-  _LicensesScreenState createState() => _LicensesScreenState();
-}
-
-class _LicensesScreenState extends State<LicensesScreen> {
-
-static final List<List<String>> licenses = [
-  ['Scrobblenaut', 'NPL | DJDoubleD & Nebulino', 'https://github.com/DJDoubleD/Scrobblenaut'],
-  ['move_to_background', 'MIT | DJDoubleD & Coin-ai', 'https://github.com/DJDoubleD/move_to_background'],
-  ['marquee', 'MIT | DJDoubleD & MarcelGarus', 'https://github.com/DJDoubleD/marquee'],
-  ['external_path', 'MIT | DJDoubleD & Siruss187', 'https://github.com/DJDoubleD/external_path'],
-  ['equalizer_flutter', 'MIT | DJDoubleD & nickwph', 'https://github.com/DJDoubleD/equalizer_flutter'],
-  ['custom_navigator', 'MIT | DJDoubleD & justprodev', 'https://github.com/DJDoubleD/custom_navigator'],
-];
-
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: FreezerAppBar('Open-Source Licenses & Libs'.i18n),
-      body: ListView(
-        children: [
-          ...List.generate(
-              licenses.length,
-              (i) => ListTile(
-                    title: Text(licenses[i][0]),
-                    subtitle: Text(licenses[i][1] + ' | Click to view Repo'),
-                    onTap: () {
-                    launchUrlString(licenses[i][2]);
-                    },
-                  )),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(0, 4, 0, 8),
-            child: Text(
-              'Huge thanks to DJDoubleD & contributors! <3'.i18n,
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 16.0),
-            ),
-          )
         ],
       ),
     );

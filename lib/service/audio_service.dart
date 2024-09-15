@@ -43,7 +43,8 @@ Future<AudioPlayerHandler> initAudioService() async {
   );
 }
 
-class AudioPlayerHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
+class AudioPlayerHandler extends BaseAudioHandler
+    with QueueHandler, SeekHandler {
   AudioPlayerHandler() {
     _init();
   }
@@ -74,7 +75,8 @@ class AudioPlayerHandler extends BaseAudioHandler with QueueHandler, SeekHandler
   QueueSource? queueSource;
   StreamSubscription? _queueStateSub;
   StreamSubscription? _mediaItemSub;
-  final BehaviorSubject<QueueState> _queueStateSubject = BehaviorSubject<QueueState>();
+  final BehaviorSubject<QueueState> _queueStateSubject =
+      BehaviorSubject<QueueState>();
   Stream<QueueState> get queueStateStream => _queueStateSubject.stream;
   QueueState get queueState => _queueStateSubject.value;
   int currentIndex = 0;
@@ -84,27 +86,6 @@ Future<void> _init() async {
   await _startSession();
   _playerInitializedCompleter.complete();
 
-    // Broadcast the current queue when just_audio sequence changes.
-    // Only emit value when MediaItem list contents is different from previous queue
-    _player.sequenceStateStream
-        .map((state) {
-          try {
-            return state?.effectiveSequence.map((source) => source.tag as MediaItem).toList();
-          } catch (e) {
-            if (e is RangeError) {
-              // This is caused by just_audio not updating the currentIndex first in the _broadcastSequence method.
-              // Because in shufflemode it's out of range after removing items from the playlist.
-              // Might be fixed in future
-              Logger.root.severe('RangeError occurred while accessing effectiveSequence: $e');
-              // Return null to indicate that the queue could/should not be broadcasted
-              return null;
-            }
-            rethrow;
-          }
-        })
-        .whereType<List<MediaItem>>() // Filter out null values (error occured).
-        .distinct((a, b) => listEquals(a, b))
-        .pipe(queue);
   // Broadcast the current queue when just_audio sequence changes.
   _player.sequenceStateStream
       .map((state) {
@@ -145,15 +126,13 @@ Future<void> _init() async {
   .distinct()
   .listen(_queueStateSubject.add);
 
-    // Broadcast media item changes after track or position in queue change,
-    // only emit value when different from previous item
-    _mediaItemSub = Rx.combineLatest3<int?, List<MediaItem>, bool, MediaItem?>(
-        _player.currentIndexStream, queue, _player.shuffleModeEnabledStream, (index, queue, shuffleModeEnabled) {
-      // Don't broadcast while shuffling to avoid intermediate MediaItem change
-      if (_rearranging) return null;
+  _mediaItemSub = Rx.combineLatest3<int?, List<MediaItem>, bool, MediaItem?>(
+      _player.currentIndexStream, queue, _player.shuffleModeEnabledStream,
+      (index, queue, shuffleModeEnabled) {
+    if (_rearranging) return null;
 
-      // Prevent broadcasting first item from new queue when other index is requested
-      if (_requestedIndex != -1 && _requestedIndex != index) return null;
+    // Prevent broadcasting first item from new queue when other index is requested
+    if (_requestedIndex != -1 && _requestedIndex != index) return null;
 
     final queueIndex = _getQueueIndex(
       index ?? 0,
@@ -270,6 +249,7 @@ Future<void> _init() async {
 
   @override
   Future<void> playFromMediaId(String mediaId, [Map<String, dynamic>? extras]) async {
+
     // Check if the mediaId is for Android Auto
     if (mediaId.startsWith(AndroidAuto.prefix)) {
       // Forward the event to Android Auto
@@ -418,7 +398,8 @@ Future<void> _init() async {
 
     _player.seek(
       Duration.zero,
-      index: _player.shuffleModeEnabled ? _player.shuffleIndices![index] : index,
+      index:
+          _player.shuffleModeEnabled ? _player.shuffleIndices![index] : index,
     );
     socketManagement.sync();
     socketManagement.playIndex(index);
@@ -486,7 +467,8 @@ Future<void> _init() async {
       _player = AudioPlayer();
     }
 
-    _loadEmptyPlaylist().then((_) => Logger.root.info('audio player initialized!'));
+    _loadEmptyPlaylist()
+        .then((_) => Logger.root.info('audio player initialized!'));
   }
 
   /// Broadcasts the current state to all clients.
@@ -601,7 +583,8 @@ Future<bool> _canControlMedia() async {
 
   Future _getTrackUrl(MediaItem mediaItem) async {
     //Check if offline
-    String offlinePath = p.join((await getExternalStorageDirectory())!.path, 'offline/');
+    String offlinePath =
+        p.join((await getExternalStorageDirectory())!.path, 'offline/');
     File f = File(p.join(offlinePath, mediaItem.id));
     if (await f.exists()) {
       //return f.path;
@@ -618,14 +601,16 @@ Future<bool> _canControlMedia() async {
     //This just returns fake url that contains metadata
     int quality = await getStreamQuality();
 
-    List? streamPlaybackDetails = jsonDecode(mediaItem.extras?['playbackDetails']);
+    List? streamPlaybackDetails =
+        jsonDecode(mediaItem.extras?['playbackDetails']);
     String streamItemId = mediaItem.id;
 
     //If Deezer provided a FALLBACK track, use the playbackDetails and id from the fallback track
     //for streaming (original stream unavailable)
     if (mediaItem.extras?['fallbackId'] != null) {
       streamItemId = mediaItem.extras?['fallbackId'];
-      streamPlaybackDetails = jsonDecode(mediaItem.extras?['playbackDetailsFallback']);
+      streamPlaybackDetails =
+          jsonDecode(mediaItem.extras?['playbackDetailsFallback']);
     }
 
     if ((streamPlaybackDetails ?? []).length < 3) return null;
@@ -645,10 +630,10 @@ Future<bool> _canControlMedia() async {
   }
 
   /// Load new queue of MediaItems to just_audio & seek to given index & position
-  Future _loadQueueAtIndex(List<MediaItem> newQueue, int index, {Duration position = Duration.zero}) async {
-    //Set requested index
+  Future _loadQueueAtIndex(List<MediaItem> newQueue, int index,
+      {Duration position = Duration.zero}) async {
+      //Set requested index
     _requestedIndex = index;
-
     //Clear old playlist from just_audio
     await _playlist.clear();
 
@@ -665,9 +650,12 @@ Future<bool> _canControlMedia() async {
   }
 
   //Replace queue, play specified item index
-  Future _loadQueueAndPlayAtIndex(QueueSource newQueueSource, List<MediaItem> newQueue, int index) async {
+  Future _loadQueueAndPlayAtIndex(
+      QueueSource newQueueSource, List<MediaItem> newQueue, int index) async {
     // Pauze platback if playing (Player seems to crash on some devices otherwise)
     await pause();  
+    //Set requested index
+    _requestedIndex = index;
 
     queueSource = newQueueSource;
     await updateQueue(newQueue);
@@ -726,7 +714,8 @@ Future<bool> _canControlMedia() async {
         // Get current position
         int pos = queue.value.length;
         // Load 25 more tracks from playlist
-        tracks = await deezerAPI.playlistTracksPage(queueSource!.id!, pos, nb: 25);
+        tracks =
+            await deezerAPI.playlistTracksPage(queueSource!.id!, pos, nb: 25);
         break;
       default:
         Logger.root.info('Reached end of queue source: ${queueSource!.source}');
@@ -736,13 +725,16 @@ Future<bool> _canControlMedia() async {
     // Deduplicate tracks already in queue with the same id
     List<String> queueIds = queue.value.map((mi) => mi.id).toList();
     tracks.removeWhere((track) => queueIds.contains(track.id));
-    List<MediaItem> extraTracks = tracks.map<MediaItem>((t) => t.toMediaItem()).toList();
+    List<MediaItem> extraTracks =
+        tracks.map<MediaItem>((t) => t.toMediaItem()).toList();
     addQueueItems(extraTracks);
   }
 
   void _playbackError(err) {
     Logger.root.severe('Playback Error from audioservice: ${err.code}', err);
-    if (err is PlatformException && err.code == 'abort' && err.message == 'Connection aborted') {
+    if (err is PlatformException &&
+        err.code == 'abort' &&
+        err.message == 'Connection aborted') {
       return;
     }
     _onError(err, null);
@@ -794,7 +786,10 @@ Future<bool> _canControlMedia() async {
     }
     Map data = {
       'index': _player.currentIndex,
-      'queue': queue.value.map<Map<String, dynamic>>((mi) => MediaItemConverter.mediaItemToMap(mi)).toList(),
+      'queue': queue.value
+          .map<Map<String, dynamic>>(
+              (mi) => MediaItemConverter.mediaItemToMap(mi))
+          .toList(),
       'position': _player.position.inMilliseconds,
       'queueSource': (queueSource ?? QueueSource()).toJson(),
       'loopMode': LoopMode.values.indexOf(_player.loopMode)
@@ -825,8 +820,9 @@ Future<bool> _canControlMedia() async {
     if (await f.exists()) {
       Logger.root.info('saved queue file found, loading...');
       Map<String, dynamic> json = jsonDecode(await f.readAsString());
-      List<MediaItem> savedQueue =
-          (json['queue'] ?? []).map<MediaItem>((mi) => (MediaItemConverter.mediaItemFromMap(mi))).toList();
+      List<MediaItem> savedQueue = (json['queue'] ?? [])
+          .map<MediaItem>((mi) => (MediaItemConverter.mediaItemFromMap(mi)))
+          .toList();
       final int lastIndex = json['index'] ?? 0;
       final Duration lastPos = Duration(milliseconds: json['position'] ?? 0);
       queueSource = QueueSource.fromJson(json['queueSource'] ?? {});
@@ -871,7 +867,9 @@ Future<bool> _canControlMedia() async {
   }
 
   Future toggleShuffle() async {
-    await setShuffleMode(_player.shuffleModeEnabled ? AudioServiceShuffleMode.none : AudioServiceShuffleMode.all);
+    await setShuffleMode(_player.shuffleModeEnabled
+        ? AudioServiceShuffleMode.none
+        : AudioServiceShuffleMode.all);
   }
 
   LoopMode getLoopMode() {
@@ -897,31 +895,43 @@ Future<bool> _canControlMedia() async {
   Future<void> updateQueueQuality() async {
     // Update quality by reconverting all items in the queue to new AudioSources
     if (_player.playing) {
-      // Pauze playback if playing (Player seems to crash on some devices otherwise)
+      // Pauze platback if playing (Player seems to crash on some devices otherwise)
       await pause();
-      await _loadQueueAtIndex(queue.value, queueState.queueIndex ?? 0, position: _player.position);
+      await _loadQueueAtIndex(queue.value, queueState.queueIndex ?? 0,
+          position: _player.position);
       await _player.play();
     } else {
-      await _loadQueueAtIndex(queue.value, queueState.queueIndex ?? 0, position: _player.position);
+      await _loadQueueAtIndex(queue.value, queueState.queueIndex ?? 0,
+          position: _player.position);
     }
   }
 
   //Play track from album
   Future playFromAlbum(Album album, String trackId) async {
-    await playFromTrackList(album.tracks ?? [], trackId, QueueSource(id: album.id, text: album.title, source: 'album'));
+    await playFromTrackList(album.tracks ?? [], trackId,
+        QueueSource(id: album.id, text: album.title, source: 'album'));
   }
 
   //Play mix by track
   Future playMix(String trackId, String trackTitle) async {
     List<Track> tracks = await deezerAPI.playMix(trackId);
-    playFromTrackList(tracks, tracks[0].id ?? '',
-        QueueSource(id: trackId, text: 'Mix based on'.i18n + ' $trackTitle', source: 'mix'));
+    playFromTrackList(
+        tracks,
+        tracks[0].id ?? '',
+        QueueSource(
+            id: trackId,
+            text: 'Mix based on'.i18n + ' $trackTitle',
+            source: 'track_mix_contextual'));
   }
 
   //Play from artist top tracks
-  Future playFromTopTracks(List<Track> tracks, String trackId, Artist artist) async {
+  Future playFromTopTracks(
+      List<Track> tracks, String trackId, Artist artist) async {
     await playFromTrackList(
-        tracks, trackId, QueueSource(id: artist.id, text: 'Top ${artist.name}', source: 'topTracks'));
+        tracks,
+        trackId,
+        QueueSource(
+            id: artist.id, text: 'Top ${artist.name}', source: 'artist_top'));
   }
 
   Future playFromPlaylist(Playlist playlist, String trackId) async {
@@ -935,19 +945,23 @@ Future<bool> _canControlMedia() async {
     QueueSource showQueueSource =
         QueueSource(id: show.id, text: show.name, source: 'show_page');
     //Generate media items
-    List<MediaItem> episodeQueue = episodes.map<MediaItem>((e) => e.toMediaItem(show)).toList();
+    List<MediaItem> episodeQueue =
+        episodes.map<MediaItem>((e) => e.toMediaItem(show)).toList();
 
     //Load and play
     await _loadQueueAndPlayAtIndex(showQueueSource, episodeQueue, index);
   }
 
   //Load tracks as queue, play track id, set queue source
-  Future playFromTrackList(List<Track> tracks, String trackId, QueueSource trackQueueSource) async {
+  Future playFromTrackList(
+      List<Track> tracks, String trackId, QueueSource trackQueueSource) async {
     //Generate media items
-    List<MediaItem> trackQueue = tracks.map<MediaItem>((track) => track.toMediaItem()).toList();
+    List<MediaItem> trackQueue =
+        tracks.map<MediaItem>((track) => track.toMediaItem()).toList();
 
     //Load and play
-    await _loadQueueAndPlayAtIndex(trackQueueSource, trackQueue, trackQueue.indexWhere((m) => m.id == trackId));
+    await _loadQueueAndPlayAtIndex(trackQueueSource, trackQueue,
+        trackQueue.indexWhere((m) => m.id == trackId));
   }
 
   Future LoadClubQueue(
@@ -1005,8 +1019,10 @@ Future<void> ClubSync(bool playing, int pos, int timestamp) async {
     QueueSource queueSource = QueueSource(
         id: stl.id,
         source: (stl.id == 'flow') ? 'flow' : 'smarttracklist',
-        text: stl.title ?? ((stl.id == 'flow') ? 'Flow'.i18n : 'Smart track list'.i18n));
-    await playFromTrackList(stl.tracks ?? [], stl.tracks?[0].id ?? '', queueSource);
+        text: stl.title ??
+            ((stl.id == 'flow') ? 'Flow'.i18n : 'Smart track list'.i18n));
+    await playFromTrackList(
+        stl.tracks ?? [], stl.tracks?[0].id ?? '', queueSource);
   }
 
   //Start visualizer
@@ -1037,7 +1053,8 @@ Future<void> ClubSync(bool playing, int pos, int timestamp) async {
 }
 
 class QueueState {
-  static const QueueState empty = QueueState([], 0, [], AudioServiceRepeatMode.none, AudioServiceShuffleMode.none);
+  static const QueueState empty = QueueState(
+      [], 0, [], AudioServiceRepeatMode.none, AudioServiceShuffleMode.none);
 
   final List<MediaItem> queue;
   final int? queueIndex;
@@ -1045,10 +1062,15 @@ class QueueState {
   final AudioServiceRepeatMode repeatMode;
   final AudioServiceShuffleMode shuffleMode;
 
-  const QueueState(this.queue, this.queueIndex, this.shuffleIndices, this.repeatMode, this.shuffleMode);
+  const QueueState(this.queue, this.queueIndex, this.shuffleIndices,
+      this.repeatMode, this.shuffleMode);
 
-  bool get hasPrevious => repeatMode != AudioServiceRepeatMode.none || (queueIndex ?? 0) > 0;
-  bool get hasNext => repeatMode != AudioServiceRepeatMode.none || (queueIndex ?? 0) + 1 < queue.length;
+  bool get hasPrevious =>
+      repeatMode != AudioServiceRepeatMode.none || (queueIndex ?? 0) > 0;
+  bool get hasNext =>
+      repeatMode != AudioServiceRepeatMode.none ||
+      (queueIndex ?? 0) + 1 < queue.length;
 
-  List<int> get indices => shuffleIndices ?? List.generate(queue.length, (i) => i);
+  List<int> get indices =>
+      shuffleIndices ?? List.generate(queue.length, (i) => i);
 }

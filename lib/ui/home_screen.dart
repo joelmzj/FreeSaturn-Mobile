@@ -192,7 +192,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
     if (_homePage == null) {
       return Center(
           child: Padding(
-        padding: EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8.0),
         child: CircularProgressIndicator(color: Theme.of(context).primaryColor,),
       ));
     }

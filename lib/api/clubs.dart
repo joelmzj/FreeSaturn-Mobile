@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
-import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:socket_io_client/socket_io_client.dart' as io;
 import 'package:get_it/get_it.dart';
 
 import '../api/deezer.dart';
@@ -117,9 +117,7 @@ class ClubRoom {
       positionTime,
     );
     final room = jsonDecode(_joinResponse);
-    print(room.toString());
     var user = room?['users']?.firstWhere((u) => u['sid'] == sid, orElse: () => null);
-    print(user.toString());
     // return user != null && user['admin'] == true;
     if (user['admin'] == true) {
       allowcontrols = true;
@@ -130,7 +128,7 @@ class ClubRoom {
 
   Future<List<Track>> _convertJsonToTracks(List<String> trackIds) async {
     try {
-      final apicall = await deezerAPI.callGwApi('song.getlistdata', params: {"sng_ids": trackIds});
+      final apicall = await deezerAPI.callGwApi('song.getlistdata', params: {'sng_ids': trackIds});
       final Map<String, dynamic> decodedJson = apicall;
       final List<dynamic> trackDataList = decodedJson['results']['data'];
       final List<Track> trackList = trackDataList.map((trackData) {
@@ -156,12 +154,12 @@ class ClubRoom {
 }
 
 class SocketManagement {
-  late final IO.Socket socket;
+  late final io.Socket socket;
   final String address;
   final ClubRoom clubRoom;
 
   SocketManagement({required this.address, required this.clubRoom}) {
-    socket = IO.io(address, IO.OptionBuilder()
+    socket = io.io(address, io.OptionBuilder()
         .setTransports(['websocket'])
         .disableAutoConnect()
         .build());
@@ -241,7 +239,7 @@ class SocketManagement {
 
     socket.on('request', (data) async {
       print(data);
-      final res = await deezerAPI.callGwApi("deezer.pageTrack", params: {"sng_id": data['id']['SNG_ID']});
+      final res = await deezerAPI.callGwApi('deezer.pageTrack', params: {'sng_id': data['id']['SNG_ID']});
       print(res);
       final Map<String, dynamic> reqtrack = res['results']['DATA'];
       datamgmt.addreq(Track.fromPrivateJson(reqtrack));
@@ -254,7 +252,7 @@ class SocketManagement {
     });
 
     socket.on('addQueue', (data) async {
-      print("addqueue");
+      print('addqueue');
       var trackId = data['track'];
       var next = data['next'];
       List<String> trackIds = [trackId];
@@ -284,13 +282,12 @@ class SocketManagement {
         throw Exception('Unexpected type for position: ${positionDynamic.runtimeType}');
       }
       await GetIt.I<AudioPlayerHandler>().ClubSync(playing, position, timestamp);
-      print("sync");
+      print('sync');
     });
 
     socket.on('index', (data) async {
       var index = data['index'];
       await GetIt.I<AudioPlayerHandler>().skipToQueueItem(index);
-      print("index");
     });
   }
 
@@ -347,10 +344,10 @@ class SocketManagement {
   }
 
 sync() async {
-  if (!await clubRoom.ifclub()) return;
+  if (clubRoom.ifclub()) return;
   bool playing = await GetIt.I<AudioPlayerHandler>().playing();
   Duration position = await GetIt.I<AudioPlayerHandler>().position();
-  bool admin = await clubRoom.ifhost();
+  bool admin = clubRoom.ifhost();
   socket.emit('sync', {
     'playing': playing,
     'position': position.inMilliseconds, // Convert Duration to milliseconds
@@ -360,7 +357,7 @@ sync() async {
 }
 
   addQueue(track, bool next) {
-        print("addqueue emitted for track:" + track.id.toString() + next.toString());
+        print('addqueue emitted for track:' + track.id.toString() + next.toString());
         if (!clubRoom.ifclub()) return();
         if (!clubRoom.ifhost()) return();
         //Emit
@@ -371,7 +368,7 @@ sync() async {
     }
 
   addQueueID(String id, bool next) {
-        print("addqueue emitted for track:" + id.toString() + next.toString());
+        print('addqueue emitted for track:' + id.toString() + next.toString());
         if (!clubRoom.ifclub()) return();
         if (!clubRoom.ifhost()) return();
         //Emit
@@ -382,8 +379,8 @@ sync() async {
     }
 
     playIndex(int i) async {
-      if (!await clubRoom.ifclub()) return;
-      if (!await clubRoom.ifhost()) return;
+      if (clubRoom.ifclub()) return;
+      if (clubRoom.ifhost()) return;
       socket.emit('index', i);
       bool isPlaying = await GetIt.I<AudioPlayerHandler>().playing();
       if (isPlaying) {
@@ -414,7 +411,7 @@ sync() async {
       if (!clubRoom.ifhost()) return;
       //Next track
       await playIndex(realqueuenumber + 1);
-      await Future.delayed(Duration(seconds: 5));
+      await Future.delayed(const Duration(seconds: 5));
       await playIndex(realqueuenumber + 1);
       await rundesktopcompat();
       await togglePlayback(true);
@@ -443,7 +440,7 @@ sync() async {
     }
 
   Future songRequest(String id) async {
-    final res = await deezerAPI.callGwApi("deezer.pageTrack",  params: {"sng_id": id});
+    final res = await deezerAPI.callGwApi('deezer.pageTrack',  params: {'sng_id': id});
         socket.emit('request', {
           'id': res['results']['DATA'],
         });
@@ -451,7 +448,7 @@ sync() async {
 
   //Remove request
   Future removeRequest(String id) async {
-    print("rmrequest emitted for track:" + id);
+    print('rmrequest emitted for track:' + id);
     if (!clubRoom.ifhost()) return;
     datamgmt.removereq(id);
     socket.emit('removeRequest', id.toString());

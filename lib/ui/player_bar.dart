@@ -123,7 +123,6 @@ class _PlayerBarState extends State<PlayerBar> {
                   child: LinearProgressIndicator(
                     color: Theme.of(context).primaryColor,
                     backgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
-                    color: Theme.of(context).primaryColor,
                     value: _progress,
                   ),
                 )

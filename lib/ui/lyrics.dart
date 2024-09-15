@@ -170,7 +170,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
                   //Loading
                   if (_loading)
                     Padding(
-                      padding: EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(8.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [CircularProgressIndicator(color: Theme.of(context).primaryColor,)],
@@ -193,7 +193,9 @@ class _LyricsScreenState extends State<LyricsScreen> {
                                   onTap: () {
                                     final offset = lyrics!.syncedLyrics![i].offset;
                                     if (offset != null) {
-                                      GetIt.I<AudioPlayerHandler>().seek(offset);
+                                      if (clubRoom.ifhost()) {
+                                        GetIt.I<AudioPlayerHandler>().seek(offset);
+                                      }
                                     }
                                   },
                                   child: Text(

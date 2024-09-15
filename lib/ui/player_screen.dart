@@ -13,7 +13,7 @@ import 'package:get_it/get_it.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:marquee/marquee.dart';
 import 'package:palette_generator/palette_generator.dart';
-import 'package:refreezer/utils/navigator_keys.dart';
+import 'package:saturn/utils/navigator_keys.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
@@ -450,7 +450,7 @@ class _QualityInfoWidgetState extends State<QualityInfoWidget> {
     if (value != '') {
       return TextButton(
         style: ButtonStyle(
-          overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColor),
+          overlayColor: WidgetStateProperty.all<Color>(Theme.of(context).primaryColor),
          ),
         child: Text(value),
         onPressed: () {
@@ -1035,8 +1035,7 @@ class _QueueScreenState extends State<QueueScreen> with WidgetsBindingObserver {
             padding: const EdgeInsets.fromLTRB(0, 4, 0, 0),
             child: IconButton(
               icon: Icon(
-                //cons.shuffle,
-                ReFreezerIcons.shuffle,
+                Icons.shuffle,
                 semanticLabel: 'Shuffle'.i18n,
                 color: shuffleModeEnabled ? Theme.of(context).primaryColor : null,
               ),
@@ -1057,7 +1056,9 @@ class _QueueScreenState extends State<QueueScreen> with WidgetsBindingObserver {
                 semanticLabel: 'Clear all'.i18n,
               ),
               onPressed: () async {
-                await audioHandler.clearQueue();
+                if (clubRoom.ifhost()) {
+                  await audioHandler.clearQueue();
+                }
                 mainNavigatorKey.currentState!.popUntil((route) => route.isFirst);
               },
             ),

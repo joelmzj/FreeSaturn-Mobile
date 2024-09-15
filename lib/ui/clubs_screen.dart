@@ -83,14 +83,14 @@ class ClubsAppBar extends StatelessWidget implements PreferredSizeWidget {
                   actions: [
                     TextButton(
                       style: ButtonStyle(
-                        overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColor),
+                        overlayColor: WidgetStateProperty.all<Color>(Theme.of(context).primaryColor),
                       ),
                       child: Text('Cancel'.i18n),
                       onPressed: () => Navigator.of(context).pop(),
                     ),
                     TextButton(
                       style: ButtonStyle(
-                        overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColor),
+                        overlayColor: WidgetStateProperty.all<Color>(Theme.of(context).primaryColor),
                       ),
                       child: Text('Create'.i18n),
                       onPressed: () async {
@@ -246,7 +246,7 @@ class _ClubsScreenState extends State<ClubsScreen> {
                                 actions: [
                                   TextButton(
                                     style: ButtonStyle(
-                                      overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColor),
+                                      overlayColor: WidgetStateProperty.all<Color>(Theme.of(context).primaryColor),
                                     ),
                                     child: Text('Cancel'.i18n),
                                     onPressed: () {
@@ -255,7 +255,7 @@ class _ClubsScreenState extends State<ClubsScreen> {
                                   ),
                                   TextButton(
                                     style: ButtonStyle(
-                                      overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColor),
+                                      overlayColor: WidgetStateProperty.all<Color>(Theme.of(context).primaryColor),
                                     ),
                                     child: Text('Join'.i18n),
                                     onPressed: () async {
@@ -314,7 +314,7 @@ void _showErrorDialog(BuildContext context, String message) {
         actions: [
           TextButton(
             style: ButtonStyle(
-              overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColor),
+              overlayColor: WidgetStateProperty.all<Color>(Theme.of(context).primaryColor),
             ),
             child: Text('OK'.i18n),
             onPressed: () {
@@ -378,14 +378,14 @@ class InClubAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         TextButton(
           style: ButtonStyle(
-            overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColor),
+            overlayColor: WidgetStateProperty.all<Color>(Theme.of(context).primaryColor),
           ),
           child: Text('No'.i18n),
           onPressed: () => Navigator.of(context).pop(),
         ),
         TextButton(
           style: ButtonStyle(
-            overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColor),
+            overlayColor: WidgetStateProperty.all<Color>(Theme.of(context).primaryColor),
           ),
           child: Text('Yes'.i18n),
           onPressed: () async {
@@ -440,7 +440,7 @@ class _InClubScreenState extends State<InClubScreen> {
 
   void refreshListeners() {
     setState(() {});
-    print("refcall");
+    print('refcall');
   }
 
   void serversidedisconnect() {
@@ -483,9 +483,9 @@ class _InClubScreenState extends State<InClubScreen> {
             overlayColor: WidgetStateProperty.all<Color>(Theme.of(context).primaryColor),
             labelColor: Theme.of(context).primaryColor,
             tabs: [
-              Tab(icon: Icon(Icons.people, semanticLabel: 'Listeners')),
-              Tab(icon: Icon(Icons.queue_music, semanticLabel: 'Music Requests')),
-              Tab(icon: Icon(Icons.chat, semanticLabel: 'Chat')),
+              const Tab(icon: Icon(Icons.people, semanticLabel: 'Listeners')),
+              const Tab(icon: Icon(Icons.queue_music, semanticLabel: 'Music Requests')),
+              const Tab(icon: Icon(Icons.chat, semanticLabel: 'Chat')),
             ],
           ),
           height: 100.0,
@@ -598,7 +598,7 @@ class _InClubScreenState extends State<InClubScreen> {
                           cursorColor: Theme.of(context).primaryColor,
                           decoration: InputDecoration(
                             hintText: 'Enter message'.i18n,
-                            border: OutlineInputBorder(),
+                            border: const OutlineInputBorder(),
                             focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Theme.of(context).primaryColor)),
                             enabledBorder: OutlineInputBorder(
@@ -606,7 +606,7 @@ class _InClubScreenState extends State<InClubScreen> {
                           ),
                         ),
                       ),
-                       SizedBox(width: 8.0),
+                       const SizedBox(width: 8.0),
                       ElevatedButton(
                       style: ButtonStyle(
                         backgroundColor: WidgetStatePropertyAll<Color>(Theme.of(context).primaryColor),
@@ -737,7 +737,7 @@ void addInitialData(dynamic initialListeners) {
 
     // Add all the mapped ClubUser instances to _listeners
     _listeners.addAll(users);
-    print("Added initial data: " + _listeners.toString());
+    print('Added initial data: ' + _listeners.toString());
   } else {
     // Handle or log unexpected data types
   }

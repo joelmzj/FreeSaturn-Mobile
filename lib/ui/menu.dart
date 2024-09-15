@@ -183,9 +183,9 @@ class MenuSheet {
       onTap: () async {
         ClubRoom clubRoom = ClubRoom();
         SocketManagement socketManagement = SocketManagement(address: 'https://clubs.saturn.kim:443', clubRoom: clubRoom);
-        print("precall");
+        print('precall');
         socketManagement.songRequest(t.id.toString());
-        print("aftercall");
+        print('aftercall');
         if (context.mounted) _close(context);
       });
 
@@ -744,7 +744,7 @@ class _SleepTimerDialogState extends State<SleepTimerDialog> {
       actions: [
         TextButton(
                   style: ButtonStyle(
-          overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColor),
+          overlayColor: WidgetStateProperty.all<Color>(Theme.of(context).primaryColor),
          ),
           child: Text('Dismiss'.i18n),
           onPressed: () {
@@ -754,7 +754,7 @@ class _SleepTimerDialogState extends State<SleepTimerDialog> {
         if (cache.sleepTimer != null)
           TextButton(
                     style: ButtonStyle(
-          overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColor),
+          overlayColor: WidgetStateProperty.all<Color>(Theme.of(context).primaryColor),
          ),
             child: Text('Cancel current timer'.i18n),
             onPressed: () {
@@ -766,7 +766,7 @@ class _SleepTimerDialogState extends State<SleepTimerDialog> {
           ),
         TextButton(
                   style: ButtonStyle(
-          overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColor),
+          overlayColor: WidgetStateProperty.all<Color>(Theme.of(context).primaryColor),
          ),
           child: Text('Save'.i18n),
           onPressed: () {
@@ -948,14 +948,14 @@ class _CreatePlaylistDialogState extends State<CreatePlaylistDialog> {
       actions: <Widget>[
         TextButton(
                   style: ButtonStyle(
-          overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColor),
+          overlayColor: WidgetStateProperty.all<Color>(Theme.of(context).primaryColor),
          ),
           child: Text('Cancel'.i18n),
           onPressed: () => Navigator.of(context).pop(),
         ),
         TextButton(
                   style: ButtonStyle(
-          overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColor),
+          overlayColor: WidgetStateProperty.all<Color>(Theme.of(context).primaryColor),
          ),
           child: Text(edit ? 'Update'.i18n : 'Create'.i18n),
           onPressed: () async {
