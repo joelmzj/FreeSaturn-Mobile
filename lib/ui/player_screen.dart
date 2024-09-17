@@ -1063,19 +1063,6 @@ class _QueueScreenState extends State<QueueScreen> with WidgetsBindingObserver {
               },
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(0, 4, 16, 0),
-            child: IconButton(
-              icon: Icon(
-                Icons.close,
-                semanticLabel: 'Clear all'.i18n,
-              ),
-              onPressed: () async {
-                await audioHandler.clearQueue();
-                mainNavigatorKey.currentState!.popUntil((route) => route.isFirst);
-              },
-            ),
-          )
         ],
       ),
       body: shuffleModeEnabled // No manual re-ordring in shuffle mode

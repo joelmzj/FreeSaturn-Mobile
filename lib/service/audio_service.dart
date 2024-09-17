@@ -540,8 +540,8 @@ Future<void> _broadcastState(PlaybackEvent event) async {
 }
 
 Future<bool> _canControlMedia() async {
-  if (await clubRoom.ifclub()) {
-    return await clubRoom.ifhost();
+  if (clubRoom.ifclub()) {
+    return clubRoom.ifhost();
   }
   return true;
 }
@@ -909,7 +909,7 @@ Future<bool> _canControlMedia() async {
   //Play track from album
   Future playFromAlbum(Album album, String trackId) async {
     await playFromTrackList(album.tracks ?? [], trackId,
-        QueueSource(id: album.id, text: album.title, source: 'album'));
+        QueueSource(id: album.id, text: album.title, source: 'album_page'));
   }
 
   //Play mix by track
