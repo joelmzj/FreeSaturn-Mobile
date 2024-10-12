@@ -286,8 +286,9 @@ Future<void> _init() async {
 
   @override
   Future<void> stop() async {
-    Logger.root.info('pausing player');
-    await _player.pause();
+    Logger.root.info('stopping player');
+    await _player.stop();
+    await super.stop();
     Logger.root.info('saving queue');
     _saveQueueToFile();
   }
