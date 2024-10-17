@@ -1358,10 +1358,10 @@ Widget build(BuildContext context) {
                         ],
                       ),
                       onPressed: () async {
-                        cache.libraryTracks ??= [];
                         // Add to library
                         if (!isFavorited) {
                           await deezerAPI.addFavoriteShow(_show.id!);
+                          setState(() => isFavorited = true);
                           Fluttertoast.showToast(
                             msg: 'Added to library'.i18n,
                             toastLength: Toast.LENGTH_SHORT,
@@ -1370,7 +1370,7 @@ Widget build(BuildContext context) {
                         } else {
                           // Remove
                           await deezerAPI.removeShow(_show.id!);
-                          await cache.save();
+                          setState(() => isFavorited = false);
                           Fluttertoast.showToast(
                             msg: 'Show removed from library!'.i18n,
                             toastLength: Toast.LENGTH_SHORT,
@@ -1403,10 +1403,6 @@ Widget build(BuildContext context) {
                   PopupMenuItem(
                     value: SortType.ALPHABETIC,
                     child: Text('Alphabetic'.i18n, style: popupMenuTextStyle()),
-                  ),
-                  PopupMenuItem(
-                    value: SortType.DATE_ADDED,
-                    child: Text('Date added'.i18n, style: popupMenuTextStyle()),
                   ),
                 ],
                 child: Row(
