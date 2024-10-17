@@ -59,6 +59,9 @@ class _LoginWidgetState extends State<LoginWidget> {
                         .i18n),
                 actions: [
                   TextButton(
+                    style: ButtonStyle(
+                      overlayColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {if (states.contains(WidgetState.pressed)) {return Theme.of(context).primaryColor.withOpacity(0.3);}return null;}),
+                    ),
                     child: Text('Continue'.i18n),
                     onPressed: () {
                       if (context.mounted) Navigator.of(context).pop();
@@ -100,6 +103,9 @@ class _LoginWidgetState extends State<LoginWidget> {
             ),
             actions: <Widget>[
               TextButton(
+                style: ButtonStyle(
+                  overlayColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {if (states.contains(WidgetState.pressed)) {return Theme.of(context).primaryColor.withOpacity(0.3);}return null;}),
+                ),
                 child: Text('Dismiss'.i18n),
                 onPressed: () {
                   _error = null;
@@ -230,6 +236,9 @@ class _LoginWidgetState extends State<LoginWidget> {
                             ),
                             actions: <Widget>[
                               TextButton(
+                                style: ButtonStyle(
+                                  overlayColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {if (states.contains(WidgetState.pressed)) {return Theme.of(context).primaryColor.withOpacity(0.3);}return null;}),
+                                ),
                                 child: Text('Save'.i18n),
                                 onPressed: () => goARL(null, controller),
                               )

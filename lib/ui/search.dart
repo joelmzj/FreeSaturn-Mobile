@@ -878,7 +878,7 @@ class SearchResultsScreen extends StatelessWidget {
                       },
                     ),
                     onTap: () async {
-                      if (clubroom.ifclub()) {
+                      if (!clubroom.ifclub()) {
                       //Load entire show, then play
                       List<ShowEpisode> episodes =
                           await deezerAPI.allShowEpisodes(e.show!.id ?? '');
@@ -1079,7 +1079,7 @@ class EpisodeListScreen extends StatelessWidget {
                 },
               ),
               onTap: () async {
-                if (clubroom.ifclub()) {
+                if (!clubroom.ifclub()) {
                 //Load entire show, then play
                 List<ShowEpisode> episodes =
                     await deezerAPI.allShowEpisodes(e.show!.id ?? '');
