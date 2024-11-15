@@ -491,7 +491,7 @@ class DeezerAPI {
   String offerName = usrdata['results'] != null ? usrdata['results']['OFFER_NAME'] : null;
 
   if (offerName == 'Deezer Free') {
-    await print( 'Free user' );
+    print( 'Free user' );
   }
 
     Map data = await callGwApi('page.get',
