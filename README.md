@@ -1,7 +1,7 @@
-# Saturn Mobile
+# FreeSaturn - Mobile
 ## Freezer Reborn
-### Your go-to **ToS Compliant** Custom Deezer Client
-### ⚠️ A premium account is required in order to use this client
+
+For non-premium Deezer users. (I've just removed premium account verification. Obviously premium features, as flac and 320kb qualities, doesn't work.)
 
 ### Donations
 https://fund.saturnclient.dev/
@@ -34,7 +34,7 @@ Install flutter SDK 3.17.2: https://flutter.dev/docs/get-started/install
 
 Download source:
 ```
-git clone https://github.com/SaturnMusic/mobile
+git clone https://github.com/joelmzj/FreeSaturn-Mobile
 git submodule init 
 git submodule update
 ```
