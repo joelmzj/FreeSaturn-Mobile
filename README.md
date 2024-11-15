@@ -35,6 +35,7 @@ Install flutter SDK 3.17.2: https://flutter.dev/docs/get-started/install
 Download source:
 ```
 git clone https://github.com/joelmzj/FreeSaturn-Mobile
+cd FreeSaturn-Mobile
 git submodule init 
 git submodule update
 ```
